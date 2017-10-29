@@ -1,5 +1,6 @@
 package com.appgui;
 
+import javax.swing.*;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
@@ -21,8 +22,11 @@ public class Client {
             String response = stub.sayHello();
             System.out.println("response: " + response);
         } catch (Exception e) {
-            System.err.println("Client exception: " + e.toString());
-            e.printStackTrace();
+            //System.err.println("Client exception: " + e.toString());
+            String message = "Unable to connect the server. Sorry, the application will be closed";
+            JOptionPane.showMessageDialog(null,message,"FATAL ERROR",JOptionPane.PLAIN_MESSAGE);
+            System.exit(-1);
+            //e.printStackTrace();
         }
     }
 }

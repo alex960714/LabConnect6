@@ -6,5 +6,6 @@ import java.util.List;
 
 public interface ServerRemote extends Remote{
     String sayHello() throws RemoteException;
-    List<Integer> gameFieldStatus() throws RemoteException;
+    int[][] gameFieldStatus() throws RemoteException;
+    int getWinner();
 }

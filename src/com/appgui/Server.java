@@ -1,5 +1,6 @@
 package com.appgui;
 
+import javax.swing.*;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,10 +10,12 @@ import java.rmi.server.UnicastRemoteObject;
 
 public class Server implements ServerRemote {
 
-    private List<Integer> gameField;
+    private int[][] gameField;
+    private int lastStroke;
 
     public Server() {
-        gameField=new ArrayList<>();
+        gameField=new int[19][19];
+        lastStroke = -1;
     }
 
     @Override
@@ -21,8 +24,110 @@ public class Server implements ServerRemote {
     }
 
     @Override
-    public List<Integer> gameFieldStatus() throws RemoteException {
-        return null;
+    public int[][] gameFieldStatus() throws RemoteException {
+        return gameField;
+    }
+
+    @Override
+    public int getWinner() {
+        int streak , streakPlayer;
+        for(int i=0;i<19;i++){
+            streak=0;
+            streakPlayer=-1;
+            for(int j=0;j<19;j++){
+                if (gameField[i][j] == streakPlayer){
+                    streak++;
+                    if (streak == 6)
+                        return streakPlayer;
+                }
+                else if (gameField[i][j] != 0){
+                    streak=1;
+                    streakPlayer = -streakPlayer;
+                }
+                else streak=0;
+            }
+        }
+        for(int i=0;i<19;i++){
+            streak=0;
+            streakPlayer=-1;
+            for(int j=0;j<19;j++){
+                if (gameField[j][i] == streakPlayer){
+                    streak++;
+                    if (streak == 6)
+                        return streakPlayer;
+                }
+                else if (gameField[j][i] != 0){
+                    streak=1;
+                    streakPlayer = -streakPlayer;
+                }
+                else streak=0;
+            }
+        }
+        for(int i=13;i>=0;i--){
+            streak=0;
+            streakPlayer=-1;
+            for(int j=0;j<19-i;j++){
+                if (gameField[i][j] == streakPlayer){
+                    streak++;
+                    if (streak == 6)
+                        return streakPlayer;
+                }
+                else if (gameField[i][j] != 0){
+                    streak=1;
+                    streakPlayer = -streakPlayer;
+                }
+                else streak=0;
+            }
+        }
+        for(int j=1;j<14;j++){
+            streak=0;
+            streakPlayer=-1;
+            for(int i=0;i<19-j;i++){
+                if (gameField[i][j] == streakPlayer){
+                    streak++;
+                    if (streak == 6)
+                        return streakPlayer;
+                }
+                else if (gameField[i][j] != 0){
+                    streak=1;
+                    streakPlayer = -streakPlayer;
+                }
+                else streak=0;
+            }
+        }
+        for(int i=5;i<19;i++){
+            streak=0;
+            streakPlayer=-1;
+            for(int j=0;j<=i;j++){
+                if (gameField[i][j] == streakPlayer){
+                    streak++;
+                    if (streak == 6)
+                        return streakPlayer;
+                }
+                else if (gameField[i][j] != 0){
+                    streak=1;
+                    streakPlayer = -streakPlayer;
+                }
+                else streak=0;
+            }
+        }
+        for(int j=1;j<14;j++){
+            streak=0;
+            streakPlayer=-1;
+            for(int i=18;i>=j;i--){
+                if (gameField[i][j] == streakPlayer){
+                    streak++;
+                    if (streak == 6)
+                        return streakPlayer;
+                }
+                else if (gameField[i][j] != 0){
+                    streak=1;
+                    streakPlayer = -streakPlayer;
+                }
+                else streak=0;
+            }
+        }
+        return 0;
     }
 
     public static void main(String args[]){
@@ -32,7 +137,7 @@ public class Server implements ServerRemote {
 
             // Bind the remote object's stub in the registry
             Registry registry = LocateRegistry.getRegistry();
-            registry.bind("Hello", stub);
+            registry.rebind("Hello", stub);
 
             System.err.println("Server ready");
         } catch (Exception e) {
