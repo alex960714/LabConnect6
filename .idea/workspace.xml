@@ -2,14 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="00922d56-2af9-4fe1-bd9e-d0b6f6ef84a2" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/appgui/ButtonClickListener.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/appgui/appgui.form" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/appgui/appgui.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/Client.java" afterPath="$PROJECT_DIR$/src/com/appgui/Client.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/Server.java" afterPath="$PROJECT_DIR$/src/com/appgui/Server.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/ServerRemote.java" afterPath="$PROJECT_DIR$/src/com/appgui/ServerRemote.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/appgui/Client.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/appgui/Server.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/appgui/ServerRemote.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/appgui/appgui.class" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/appgui/appgui.java" afterPath="$PROJECT_DIR$/src/com/appgui/appgui.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -48,8 +45,8 @@
       <file leaf-file-name="appgui.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/appgui/appgui.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="230">
-              <caret line="46" column="120" lean-forward="false" selection-start-line="46" selection-start-column="120" selection-end-line="46" selection-end-column="120" />
+            <state relative-caret-position="561">
+              <caret line="33" column="5" lean-forward="true" selection-start-line="33" selection-start-column="5" selection-end-line="33" selection-end-column="5" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -534,8 +531,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/appgui/appgui.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="230">
-          <caret line="46" column="120" lean-forward="false" selection-start-line="46" selection-start-column="120" selection-end-line="46" selection-end-column="120" />
+        <state relative-caret-position="561">
+          <caret line="33" column="5" lean-forward="true" selection-start-line="33" selection-start-column="5" selection-end-line="33" selection-end-column="5" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
