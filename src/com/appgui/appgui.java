@@ -29,7 +29,7 @@ public class appgui extends JPanel {
         JFrame frame = new JFrame("LabConnect6");
         frame.setContentPane(new appgui());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(617, 630);
+        frame.setSize(617, 639);
         frame.setVisible(true);
     }
 }

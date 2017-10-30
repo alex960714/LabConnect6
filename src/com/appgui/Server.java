@@ -12,6 +12,8 @@ public class Server implements ServerRemote {
 
     private int[][] gameField;
     private int lastStroke;
+    private boolean whiteIsConnected;
+    private boolean blackIsConnected;
 
     public Server() {
         gameField=new int[19][19];
@@ -19,8 +21,13 @@ public class Server implements ServerRemote {
     }
 
     @Override
-    public String sayHello() throws RemoteException {
-        return null;
+    public int getColor() throws RemoteException {
+        if(!whiteIsConnected)
+            return 1;
+        else if (!blackIsConnected)
+            return -1;
+        else
+            return 0;
     }
 
     @Override
