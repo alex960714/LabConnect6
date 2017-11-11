@@ -70,9 +70,9 @@ public class Client {
                     this.image = ImageIO.read(new File("resources\\black.png"));
                 }
             } catch (IOException ex) {
-                /*String message = "Unable to draw the stone. Sorry, the application will be closed";
+                String message = "Unable to draw the stone. Sorry, the application will be closed";
                 JOptionPane.showMessageDialog(null,message,"FATAL ERROR",JOptionPane.PLAIN_MESSAGE);
-                System.exit(-1);*/
+                System.exit(-1);
             }
         }
 
@@ -114,19 +114,21 @@ public class Client {
         try {
             while (true) {
                 while (stepsRemain > 0) {
-                    cellX = Math.round(19 * ((float) clickX) / frame.getWidth());
-                    cellY = Math.round(19 * ((float) clickY) / frame.getHeight());
-                    if (gameField[cellX][cellY] == 0) {
-                        gameField[cellX][cellY] = color;
-                        //String message = "You are in a loop!" + cellX.toString() + " " + cellY.toString();
-                        //JOptionPane.showMessageDialog(null,message,"FATAL ERROR",JOptionPane.PLAIN_MESSAGE);
-                        frame.add(new Chip(cellX, cellY, color));
-                        frame.setVisible(true);
-                        stepsRemain--;
-                    }
-                    clickX=clickY=-1;
-                    if (stepsRemain == 0) {
-                        stub.setMove(color, gameField);
+                    if(clickX>=0 && clickX<=frame.getWidth() && clickY>=0 && clickY<=frame.getHeight()) {
+                        cellX = Math.round(19 * ((float) clickX) / frame.getWidth());
+                        cellY = Math.round(19 * ((float) clickY) / frame.getHeight());
+                        if (gameField[cellX][cellY] == 0) {
+                            gameField[cellX][cellY] = color;
+                            String message = "You are in a loop!" + cellX.toString() + " " + cellY.toString();
+                            JOptionPane.showMessageDialog(null,message,"FATAL ERROR",JOptionPane.PLAIN_MESSAGE);
+                            frame.add(new Chip(cellX, cellY, color));
+                            frame.setVisible(true);
+                            stepsRemain--;
+                        }
+                        clickX = clickY = -1;
+                        if (stepsRemain == 0) {
+                            stub.setMove(color, gameField);
+                        }
                     }
                 }
                 //TODO: get status from server
