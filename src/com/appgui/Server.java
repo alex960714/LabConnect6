@@ -12,26 +12,33 @@ public class Server implements ServerRemote {
 
     private int[][] gameField;
     private int lastStroke;
+    private int winner;
     private boolean whiteIsConnected;
     private boolean blackIsConnected;
 
     public Server() {
         gameField=new int[19][19];
-        lastStroke = -1;
+        lastStroke = 1;
+        winner = 0;
     }
 
     @Override
-    public int getColor() throws RemoteException {
-        if(!whiteIsConnected)
+    public int getColor() {
+        if(!whiteIsConnected) {
+            whiteIsConnected=true;
             return 1;
-        else if (!blackIsConnected)
+        }
+        else if (!blackIsConnected) {
+            blackIsConnected=true;
             return -1;
-        else
+        }
+        else {
             return 0;
+        }
     }
 
     @Override
-    public int[][] gameFieldStatus() throws RemoteException {
+    public int[][] gameFieldStatus() {
         return gameField;
     }
 
@@ -135,6 +142,17 @@ public class Server implements ServerRemote {
             }
         }
         return 0;
+    }
+
+    @Override
+    public void setMove(int player, int[][] _field) {
+        gameField=_field;
+        lastStroke=player;
+    }
+
+    @Override
+    public int getMove() {
+        return lastStroke;
     }
 
     public static void main(String args[]){
