@@ -1,13 +1,8 @@
 package com.appgui;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -29,7 +24,6 @@ public class Client {
         try {
             registry = LocateRegistry.getRegistry(host);
             stub = (ServerRemote) registry.lookup("Hello");
-            //System.out.println(stub);
 
             int response = stub.getColor();
             if(response==0){
@@ -45,18 +39,16 @@ public class Client {
                 frame.setTitle("Connect 6 - BLACK");
             }
         } catch (Exception e) {
-            //System.err.println("Client exception: " + e.toString());
             String message = "Unable to connect the server. Sorry, the application will be closed";
             JOptionPane.showMessageDialog(null,message,"FATAL ERROR",JOptionPane.PLAIN_MESSAGE);
             System.exit(-1);
-            //e.printStackTrace();
         }
     }
 
     public static void main(String args[]){
         frame = new JFrame("LabConnect6");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(617, 639);
+        frame.setSize(618, 639);
         frame.add(new Field());
         frame.setVisible(true);
         frame.addMouseListener(new MouseAdapter() {
@@ -74,8 +66,6 @@ public class Client {
         int stepsRemain;
         Integer cellX = -1, cellY = -1;
         int chipX = -1, chipY = -1;
-        clickX=-1;
-        clickY=-1;
         if (color == 1){
             stepsRemain=0;
         }
@@ -84,26 +74,27 @@ public class Client {
         }
         try {
             while (true) {
+                clickX=-1;
+                clickY=-1;
                 while (stepsRemain > 0) {
-                    if(clickX>=0 && clickX<=frame.getWidth() && clickY>=0 && clickY<=frame.getHeight()) {
-                        cellX = Math.round(19 * ((float) clickX) / frame.getWidth());
-                        cellY = Math.round(19 * ((float) clickY) / frame.getHeight());
-                        if (gameField[cellX][cellY] == 0) {
-                            gameField[cellX][cellY] = color;
-                            chipX=cellX*(int)((frame.getWidth()/19)+0.5);
-                            chipY=cellY*(int)((frame.getHeight()/19)+0.5);
-                            frame.add(new Chip(chipX, chipY, color));
-                            frame.setVisible(true);
-                            changes[stepsRemain*2-2]=cellX;
-                            changes[stepsRemain*2-1]=cellY;
-                            stepsRemain--;
-                        }
-                        clickX = clickY = -1;
-                        if (stepsRemain == 0) {
-                            stub.setMove(color, changes);
-                            for(int i=0;i<4;i++){
-                                changes[i]=-1;
-                            }
+                    cellX = (clickX - 4)/31;
+                    cellY = (clickY - 4)/31 - 1;
+                    if (cellX>=0 && cellX<19 && cellY>=0 && cellY<19 && gameField[cellX][cellY] == 0) {
+                        gameField[cellX][cellY] = color;
+                        chipX = 4 + cellX * 31 + 10;
+                        chipY = 4 + cellY * 31 + 10;
+                        frame.add(new Chip(chipX, chipY, color));
+                        frame.setVisible(true);
+                        chipX = chipY = -1;
+                        changes[stepsRemain * 2 - 2] = cellX;
+                        changes[stepsRemain * 2 - 1] = cellY;
+                        stepsRemain--;
+                    }
+                    clickX = clickY = -1;
+                    if (stepsRemain == 0) {
+                        stub.setMove(color, changes);
+                        for(int i=0;i<4;i++) {
+                            changes[i] = -1;
                         }
                     }
                     Thread.sleep(15);
@@ -111,25 +102,25 @@ public class Client {
 
                 if (stub.getMove() == -color) {
                     stepsRemain = 2;
-                    //gameField = stub.gameFieldStatus();
                     changes=stub.getChanges();
 
                     gameField[changes[0]][changes[1]]=-color;
-                    chipX=changes[0]*(int)((frame.getWidth()/19)+0.5);
-                    chipY=changes[1]*(int)((frame.getHeight()/19)+0.5);
+                    chipX=4 + changes[0]*31 + 10;
+                    chipY=4 + changes[1]*31 + 10;
                     frame.add(new Chip(chipX, chipY, -color));
                     frame.setVisible(true);
 
                     if(changes[2]!=-1){
                         gameField[changes[2]][changes[3]]=-color;
-                        chipX=changes[2]*(int)((frame.getWidth()/19)+0.5);
-                        chipY=changes[3]*(int)((frame.getHeight()/19)+0.5);
+                        chipX=4 + changes[2]*31 + 10;
+                        chipY=4 + changes[3]*31 + 10;
                         frame.add(new Chip(chipX, chipY, -color));
                         frame.setVisible(true);
                     }
                     for(int i=0;i<4;i++){
                         changes[i]=-1;
                     }
+                    chipX=chipY=-1;
 
                     int winner = stub.getWinner();
                     if (winner == color) {
