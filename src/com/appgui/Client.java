@@ -53,58 +53,11 @@ public class Client {
         }
     }
 
-    private static class Chip extends JPanel{
-        private BufferedImage image;
-        private Integer fieldX, fieldY;
-        private int color;
-
-        public Chip(int fieldX, int fieldY, int clr){
-            this.fieldX=fieldX;
-            this.fieldY=fieldY;
-            this.color=clr;
-
-            try {
-                if(this.color==1) {
-                    this.image = ImageIO.read(new File("resources\\white.gif"));
-                }
-                else{
-                    this.image = ImageIO.read(new File("resources\\black.gif"));
-                }
-            } catch (IOException ex) {
-                String message = "Unable to draw the stone. Sorry, the application will be closed";
-                JOptionPane.showMessageDialog(null,message,"FATAL ERROR",JOptionPane.PLAIN_MESSAGE);
-                System.exit(-1);
-            }
-        }
-
-        @Override
-        protected void paintComponent(Graphics g) {
-            /*try {
-                if(this.color==1) {
-                    this.image = ImageIO.read(new File("resources\\white.gif"));
-                }
-                else{
-                    this.image = ImageIO.read(new File("resources\\black.gif"));
-                }
-            } catch (IOException ex) {
-                String message = "Unable to draw the stone. Sorry, the application will be closed";
-                JOptionPane.showMessageDialog(null,message,"FATAL ERROR",JOptionPane.PLAIN_MESSAGE);
-                System.exit(-1);
-            }*/
-            super.paintComponent(g);
-
-            /*String message = "You are in a loop!" + this.fieldX.toString() + " " + this.fieldY.toString();
-            JOptionPane.showMessageDialog(null, message, "FATAL ERROR", JOptionPane.PLAIN_MESSAGE);*/
-            g.drawImage(this.image, this.fieldX, this.fieldY, this);
-
-        }
-    }
-
     public static void main(String args[]){
         frame = new JFrame("LabConnect6");
-        frame.setContentPane(new appgui());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(617, 639);
+        frame.add(new Field());
         frame.setVisible(true);
         frame.addMouseListener(new MouseAdapter() {
             @Override
@@ -164,14 +117,14 @@ public class Client {
                     gameField[changes[0]][changes[1]]=-color;
                     chipX=changes[0]*(int)((frame.getWidth()/19)+0.5);
                     chipY=changes[1]*(int)((frame.getHeight()/19)+0.5);
-                    frame.add(new Chip(chipX, chipY, color));
+                    frame.add(new Chip(chipX, chipY, -color));
                     frame.setVisible(true);
 
                     if(changes[2]!=-1){
                         gameField[changes[2]][changes[3]]=-color;
                         chipX=changes[2]*(int)((frame.getWidth()/19)+0.5);
                         chipY=changes[3]*(int)((frame.getHeight()/19)+0.5);
-                        frame.add(new Chip(chipX, chipY, color));
+                        frame.add(new Chip(chipX, chipY, -color));
                         frame.setVisible(true);
                     }
                     for(int i=0;i<4;i++){
