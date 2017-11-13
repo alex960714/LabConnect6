@@ -18,6 +18,7 @@ public class Client {
     private static int color;
     private static JFrame frame;
     private static Integer clickX, clickY;
+    private static int[] changes = {-1,-1,-1,-1};
     private static Registry registry;
     private static ServerRemote stub;
 
@@ -54,7 +55,7 @@ public class Client {
 
     private static class Chip extends JPanel{
         private BufferedImage image;
-        private int fieldX, fieldY;
+        private Integer fieldX, fieldY;
         private int color;
 
         public Chip(int fieldX, int fieldY, int clr){
@@ -78,10 +79,7 @@ public class Client {
 
         @Override
         protected void paintComponent(Graphics g) {
-            /*String message = "You are in a loop!" + clickX.toString() + " " + clickY.toString();
-            JOptionPane.showMessageDialog(null, message, "FATAL ERROR", JOptionPane.PLAIN_MESSAGE);*/
-            super.paintComponent(g);
-            try {
+            /*try {
                 if(this.color==1) {
                     this.image = ImageIO.read(new File("resources\\white.gif"));
                 }
@@ -92,7 +90,11 @@ public class Client {
                 String message = "Unable to draw the stone. Sorry, the application will be closed";
                 JOptionPane.showMessageDialog(null,message,"FATAL ERROR",JOptionPane.PLAIN_MESSAGE);
                 System.exit(-1);
-            }
+            }*/
+            super.paintComponent(g);
+
+            /*String message = "You are in a loop!" + this.fieldX.toString() + " " + this.fieldY.toString();
+            JOptionPane.showMessageDialog(null, message, "FATAL ERROR", JOptionPane.PLAIN_MESSAGE);*/
             g.drawImage(this.image, this.fieldX, this.fieldY, this);
 
         }
@@ -118,6 +120,7 @@ public class Client {
 
         int stepsRemain;
         Integer cellX = -1, cellY = -1;
+        int chipX = -1, chipY = -1;
         clickX=-1;
         clickY=-1;
         if (color == 1){
@@ -134,22 +137,46 @@ public class Client {
                         cellY = Math.round(19 * ((float) clickY) / frame.getHeight());
                         if (gameField[cellX][cellY] == 0) {
                             gameField[cellX][cellY] = color;
-                            frame.add(new Chip(cellX, cellY, color));
+                            chipX=cellX*(int)((frame.getWidth()/19)+0.5);
+                            chipY=cellY*(int)((frame.getHeight()/19)+0.5);
+                            frame.add(new Chip(chipX, chipY, color));
                             frame.setVisible(true);
+                            changes[stepsRemain*2-2]=cellX;
+                            changes[stepsRemain*2-1]=cellY;
                             stepsRemain--;
                         }
                         clickX = clickY = -1;
                         if (stepsRemain == 0) {
-                            stub.setMove(color, gameField);
+                            stub.setMove(color, changes);
+                            for(int i=0;i<4;i++){
+                                changes[i]=-1;
+                            }
                         }
                     }
                     Thread.sleep(15);
                 }
-                //TODO: get status from server
 
                 if (stub.getMove() == -color) {
                     stepsRemain = 2;
-                    gameField = stub.gameFieldStatus();
+                    //gameField = stub.gameFieldStatus();
+                    changes=stub.getChanges();
+
+                    gameField[changes[0]][changes[1]]=-color;
+                    chipX=changes[0]*(int)((frame.getWidth()/19)+0.5);
+                    chipY=changes[1]*(int)((frame.getHeight()/19)+0.5);
+                    frame.add(new Chip(chipX, chipY, color));
+                    frame.setVisible(true);
+
+                    if(changes[2]!=-1){
+                        gameField[changes[2]][changes[3]]=-color;
+                        chipX=changes[2]*(int)((frame.getWidth()/19)+0.5);
+                        chipY=changes[3]*(int)((frame.getHeight()/19)+0.5);
+                        frame.add(new Chip(chipX, chipY, color));
+                        frame.setVisible(true);
+                    }
+                    for(int i=0;i<4;i++){
+                        changes[i]=-1;
+                    }
 
                     int winner = stub.getWinner();
                     if (winner == color) {

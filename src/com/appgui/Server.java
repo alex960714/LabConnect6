@@ -13,6 +13,7 @@ public class Server implements ServerRemote {
     private int[][] gameField;
     private int lastStroke;
     private int winner;
+    private int[] changes = {-1,-1,-1,-1};
     private boolean whiteIsConnected;
     private boolean blackIsConnected;
 
@@ -37,10 +38,10 @@ public class Server implements ServerRemote {
         }
     }
 
-    @Override
+    /*@Override
     public int[][] gameFieldStatus() {
         return gameField;
-    }
+    }*/
 
     @Override
     public int getWinner() {
@@ -145,14 +146,22 @@ public class Server implements ServerRemote {
     }
 
     @Override
-    public void setMove(int player, int[][] _field) {
-        gameField=_field;
+    public void setMove(int player, int[] _changes) {
+
+        for(int i=0;i<4;i++){
+            changes[i]=_changes[i];
+        }
         lastStroke=player;
     }
 
     @Override
     public int getMove() {
         return lastStroke;
+    }
+
+    @Override
+    public int[] getChanges() {
+        return changes;
     }
 
     public static void main(String args[]){
