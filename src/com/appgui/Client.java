@@ -17,7 +17,7 @@ public class Client {
     private static int gameField[][];
     private static int color;
     private static JFrame frame;
-    private static Integer clickX=0, clickY=0;
+    private static Integer clickX, clickY;
     private static Registry registry;
     private static ServerRemote stub;
 
@@ -64,10 +64,10 @@ public class Client {
 
             try {
                 if(this.color==1) {
-                    this.image = ImageIO.read(new File("resources\\white.png"));
+                    this.image = ImageIO.read(new File("resources\\white.gif"));
                 }
                 else{
-                    this.image = ImageIO.read(new File("resources\\black.png"));
+                    this.image = ImageIO.read(new File("resources\\black.gif"));
                 }
             } catch (IOException ex) {
                 String message = "Unable to draw the stone. Sorry, the application will be closed";
@@ -78,8 +78,23 @@ public class Client {
 
         @Override
         protected void paintComponent(Graphics g) {
+            /*String message = "You are in a loop!" + clickX.toString() + " " + clickY.toString();
+            JOptionPane.showMessageDialog(null, message, "FATAL ERROR", JOptionPane.PLAIN_MESSAGE);*/
             super.paintComponent(g);
+            try {
+                if(this.color==1) {
+                    this.image = ImageIO.read(new File("resources\\white.gif"));
+                }
+                else{
+                    this.image = ImageIO.read(new File("resources\\black.gif"));
+                }
+            } catch (IOException ex) {
+                String message = "Unable to draw the stone. Sorry, the application will be closed";
+                JOptionPane.showMessageDialog(null,message,"FATAL ERROR",JOptionPane.PLAIN_MESSAGE);
+                System.exit(-1);
+            }
             g.drawImage(this.image, this.fieldX, this.fieldY, this);
+
         }
     }
 
@@ -102,7 +117,7 @@ public class Client {
         gameField=new int[19][19];
 
         int stepsRemain;
-        Integer cellX, cellY;
+        Integer cellX = -1, cellY = -1;
         clickX=-1;
         clickY=-1;
         if (color == 1){
@@ -119,8 +134,6 @@ public class Client {
                         cellY = Math.round(19 * ((float) clickY) / frame.getHeight());
                         if (gameField[cellX][cellY] == 0) {
                             gameField[cellX][cellY] = color;
-                            String message = "You are in a loop!" + cellX.toString() + " " + cellY.toString();
-                            JOptionPane.showMessageDialog(null,message,"FATAL ERROR",JOptionPane.PLAIN_MESSAGE);
                             frame.add(new Chip(cellX, cellY, color));
                             frame.setVisible(true);
                             stepsRemain--;
@@ -130,6 +143,7 @@ public class Client {
                             stub.setMove(color, gameField);
                         }
                     }
+                    Thread.sleep(15);
                 }
                 //TODO: get status from server
 
@@ -148,11 +162,14 @@ public class Client {
                         break;
                     }
                 }
+                Thread.sleep(10);
             }
         } catch (RemoteException e) {
             String message = "Unable to connect the server. Sorry, the application will be closed";
             JOptionPane.showMessageDialog(null, message, "FATAL ERROR", JOptionPane.PLAIN_MESSAGE);
             System.exit(-1);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 }
