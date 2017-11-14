@@ -66,6 +66,7 @@ public class Client {
         int stepsRemain;
         Integer cellX = -1, cellY = -1;
         int chipX = -1, chipY = -1;
+        int winner = 0;
         if (color == 1){
             stepsRemain=0;
         }
@@ -96,12 +97,18 @@ public class Client {
                         for(int i=0;i<4;i++) {
                             changes[i] = -1;
                         }
+                        winner = stub.getWinner();
+                        if (winner == color) {
+                            String message = "Congratulations! You are winner!";
+                            JOptionPane.showMessageDialog(null, message, "YOU WIN!!!", JOptionPane.PLAIN_MESSAGE);
+                            break;
+                        }
                     }
                     Thread.sleep(15);
                 }
 
                 if (stub.getMove() == -color) {
-                    stepsRemain = 2;
+
                     changes=stub.getChanges();
 
                     gameField[changes[0]][changes[1]]=-color;
@@ -121,17 +128,14 @@ public class Client {
                         changes[i]=-1;
                     }
                     chipX=chipY=-1;
-
-                    int winner = stub.getWinner();
-                    if (winner == color) {
-                        String message = "Congratulations! You are winner!";
-                        JOptionPane.showMessageDialog(null, message, "YOU WIN!!!", JOptionPane.PLAIN_MESSAGE);
-                        break;
-                    } else if (winner == -color) {
+                    winner = stub.getWinner();
+                    if (winner == -color) {
                         String message = "Opponent is winner";
                         JOptionPane.showMessageDialog(null, message, "YOU LOST!!!", JOptionPane.PLAIN_MESSAGE);
                         break;
                     }
+                    stepsRemain = 2;
+
                 }
                 Thread.sleep(10);
             }
