@@ -1,9 +1,5 @@
 package com.appgui;
 
-import javax.swing.*;
-import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.List;
 import java.rmi.registry.Registry;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
@@ -12,7 +8,6 @@ public class Server implements ServerRemote {
 
     private int[][] gameField;
     private int lastStroke;
-    private int winner;
     private int[] changes = {-1,-1,-1,-1};
     private boolean whiteIsConnected;
     private boolean blackIsConnected;
@@ -20,7 +15,6 @@ public class Server implements ServerRemote {
     public Server() {
         gameField=new int[19][19];
         lastStroke = 1;
-        winner = 0;
     }
 
     @Override
@@ -168,7 +162,6 @@ public class Server implements ServerRemote {
             Server obj = new Server();
             ServerRemote stub = (ServerRemote) UnicastRemoteObject.exportObject(obj, 0);
 
-            // Bind the remote object's stub in the registry
             Registry registry = LocateRegistry.getRegistry();
             registry.rebind("Hello", stub);
 
