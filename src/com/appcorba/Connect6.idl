@@ -1,0 +1,11 @@
+module Connect6 {
+    interface ServerCorb
+    {
+        typedef long intArray[4];
+        long getColor();
+        long getWinner();
+        void setMove(in long player, in intArray _changes);
+        long getMove();
+        intArray getChanges();
+    };
+};
