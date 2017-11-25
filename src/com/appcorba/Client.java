@@ -12,7 +12,6 @@ import org.omg.CosNaming.NamingContextExtHelper;
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.rmi.RemoteException;
 
 public class Client {
     private static int gameField[][];
