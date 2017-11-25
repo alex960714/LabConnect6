@@ -20,16 +20,16 @@ public class Server {
             serverCorb.setOrb(orb);
             org.omg.CORBA.Object ref = rootpoa.servant_to_reference(serverCorb);
             ServerCorb href = ServerCorbHelper.narrow(ref);
+
             org.omg.CORBA.Object objRef = orb.resolve_initial_references("NameService");
             NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
             String name = "Hello";
             NameComponent path[] = ncRef.to_name( name );
             ncRef.rebind(path, href);
-            System.out.println("HelloServer ready and waiting ...");
+            System.out.println("ServerCorb ready and waiting ...");
             orb.run();
         } catch (Exception e){
             System.err.println("ERROR: " + e);   e.printStackTrace(System.out);
         }
-        System.out.println("HelloServer Exiting ...");
     }
 }
