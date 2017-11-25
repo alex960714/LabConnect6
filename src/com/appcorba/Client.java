@@ -1,8 +1,11 @@
 package com.appcorba;
 
+import Connect6.ServerCorb;
+import Connect6.ServerCorbHelper;
 import com.appgui.Chip;
 import com.appgui.Field;
 import org.omg.CORBA.ORB;
+import org.omg.CORBA.Object;
 import org.omg.CosNaming.NamingContextExt;
 import org.omg.CosNaming.NamingContextExtHelper;
 
@@ -17,6 +20,7 @@ public class Client {
     private static JFrame frame;
     private static Integer clickX, clickY;
     private static int[] changes = {-1,-1,-1,-1};
+    private static ServerCorb clientCorb;
 
     private Client() {}
 
@@ -24,14 +28,14 @@ public class Client {
         String host = (args.length < 1) ? null : args[0];
         try {
             ORB orb = ORB.init(args, null);
-            org.omg.CORBA.Object objRef =  orb.resolve_initial_references("NameService");
+            Object objRef =  orb.resolve_initial_references("NameService");
             NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
 
             String name = "Hello";
-            helloImpl = HelloHelper.narrow(ncRef.resolve_str(name));
-            System.out.println("Obtained a handle on server object: " + helloImpl);
+            clientCorb = ServerCorbHelper.narrow(ncRef.resolve_str(name));
+            System.out.println("Obtained a handle on server object: " + clientCorb);
 
-            int response = serverCorb.getColor();
+            int response = clientCorb.getColor();
             if(response==0){
                 String message = "Server is currently busy. Sorry, the application will be closed";
                 JOptionPane.showMessageDialog(null,message,"Server is busy!",JOptionPane.PLAIN_MESSAGE);
@@ -99,11 +103,11 @@ public class Client {
                     }
                     clickX = clickY = -1;
                     if (stepsRemain == 0) {
-                        serverCorb.setMove(color, changes);
+                        clientCorb.setMove(color, changes);
                         for(int i=0;i<4;i++) {
                             changes[i] = -1;
                         }
-                        winner = serverCorb.getWinner();
+                        winner = clientCorb.getWinner();
                         if (winner == color) {
                             String message = "Congratulations! You are winner!";
                             JOptionPane.showMessageDialog(null, message, "YOU WIN!!!", JOptionPane.PLAIN_MESSAGE);
@@ -113,9 +117,9 @@ public class Client {
                     Thread.sleep(15);
                 }
 
-                if (serverCorb.getMove() == -color) {
+                if (clientCorb.getMove() == -color) {
 
-                    changes= serverCorb.getChanges();
+                    changes= clientCorb.getChanges();
 
                     gameField[changes[0]][changes[1]]=-color;
                     chipX=4 + changes[0]*31 + 10;
@@ -134,7 +138,7 @@ public class Client {
                         changes[i]=-1;
                     }
                     chipX=chipY=-1;
-                    winner = serverCorb.getWinner();
+                    winner = clientCorb.getWinner();
                     if (winner == -color) {
                         String message = "Opponent is winner";
                         JOptionPane.showMessageDialog(null, message, "YOU LOST!!!", JOptionPane.PLAIN_MESSAGE);
@@ -145,12 +149,10 @@ public class Client {
                 }
                 Thread.sleep(10);
             }
-        } catch (RemoteException e) {
+        } catch (Exception e) {
             String message = "Unable to connect the server. Sorry, the application will be closed";
             JOptionPane.showMessageDialog(null, message, "FATAL ERROR", JOptionPane.PLAIN_MESSAGE);
             System.exit(-1);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
     }
 }

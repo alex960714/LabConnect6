@@ -26,6 +26,7 @@ public class Server {
             NameComponent path[] = ncRef.to_name( name );
             ncRef.rebind(path, href);
             System.out.println("HelloServer ready and waiting ...");
+            orb.run();
         } catch (Exception e){
             System.err.println("ERROR: " + e);   e.printStackTrace(System.out);
         }
